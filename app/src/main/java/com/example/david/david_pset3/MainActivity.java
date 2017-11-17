@@ -1,6 +1,8 @@
 package com.example.david.david_pset3;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncStats;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ListView;
@@ -34,8 +37,12 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -56,6 +63,25 @@ public class MainActivity extends AppCompatActivity {
     String mImageURLString = "";
     String descriptionText="";
     String priceText="";
+
+
+    String Chicken = "";
+    Integer ChickenInt = 0;
+    String Italian ="";
+    Integer ItalianInt = 0;
+
+    String Spaghetti = "";
+    Integer SpaghettiInt = 0;
+
+    String Pizza ="";
+    Integer PizzaInt = 0;
+
+    String Grilled = "";
+    Integer GrilledInt = 0;
+
+    String Pesto ="";
+    Integer PestoInt = 0;
+
     int layer = 0;
 
 
@@ -81,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         list_text.add("loading....");
 
         go_deeper0();
+        loadFromSharedPrefs();
     }
     public void get_img(String imageUrl) {
 
@@ -261,8 +288,115 @@ public class MainActivity extends AppCompatActivity {
 
         select_layer("");
 
+}
+    public void array_to_strings() {
+        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        Chicken = "";
+        Italian = "";
+        Spaghetti = "";
+        Pizza = "";
+        Grilled = "";
+        Pesto="";
+        ChickenInt = 0;
+        ItalianInt = 0;
+        SpaghettiInt = 0;
+        PizzaInt = 0;
+        GrilledInt = 0;
+        for (int i = 0; i < ordered_list.size(); i++) {
+            if (ordered_list.get(i).equals("Chicken Noodle Soup")) {
+                Chicken = "Chicken Noodle Soup";
+                ChickenInt = ordered_amounts.get(i);
+
+            } if (ordered_list.get(i).equals("Italian Salad")) {
+                Italian = "Italian Salad";
+                ItalianInt = ordered_amounts.get(i);
+            }  if (ordered_list.get(i).equals("Spaghetti and Meatballs")) {
+                System.out.println("ASHDDHAJKSHDLKSHDIUWHKSADLKWUDH");
+                Spaghetti = "Spaghetti and Meatballs";
+                SpaghettiInt = ordered_amounts.get(i);
+
+            }  if (ordered_list.get(i).equals("Margherita Pizza")) {
+                Pizza = "Margherita Pizza";
+                PizzaInt = ordered_amounts.get(i);
+
+            }  if (ordered_list.get(i).equals("Grilled Steelhead Trout Sandwich")) {
+                Grilled = "Grilled Steelhead Trout Sandwich";
+                GrilledInt = ordered_amounts.get(i);
+
+            }  if (ordered_list.get(i).equals("Pesto Linguini")) {
+                Pesto = "Pesto Linguini";
+                PestoInt = ordered_amounts.get(i);
+
+            }
+
+
+        }
     }
 
+
+    public void safeArray() {
+        array_to_strings();
+        SharedPreferences prefs = this.getSharedPreferences("settings", this.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        System.out.println("))))))))))))))))))))))))" + Spaghetti + "(((((((((((((((((");
+        editor.putInt("int1", SpaghettiInt);
+        editor.putInt("int2", ChickenInt);
+        editor.putInt("int3", PizzaInt);
+        editor.putInt("int4", GrilledInt);
+        editor.putInt("int5", PestoInt);
+        editor.putInt("int6", ItalianInt);
+        editor.putString("orderList1", Spaghetti);
+        editor.putString("orderList2", Chicken);
+        editor.putString("orderList3", Pizza);
+        editor.putString("orderList4", Grilled);
+        editor.putString("orderList5", Pesto);
+        editor.putString("orderList6", Italian);
+
+        editor.commit();
+    }
+
+    public void loadFromSharedPrefs() {
+        SharedPreferences prefs = this.getSharedPreferences("settings", this.MODE_PRIVATE);
+        Spaghetti = prefs.getString("orderList1", Spaghetti);
+        Chicken = prefs.getString("orderList2", Chicken);
+        Pizza = prefs.getString("orderList3", Pizza);
+        Grilled = prefs.getString("orderList4", Grilled);
+        Pesto = prefs.getString("orderList5", Pesto);
+        Italian = prefs.getString("orderList6", Italian);
+        SpaghettiInt = prefs.getInt("int1", SpaghettiInt);
+        ChickenInt = prefs.getInt("int2", ChickenInt);
+        PizzaInt = prefs.getInt("int3", PizzaInt);
+        GrilledInt = prefs.getInt("int4", GrilledInt);
+        PestoInt = prefs.getInt("int5", PestoInt);
+        ItalianInt = prefs.getInt("int6", ItalianInt);
+
+        ordered_list.clear();
+        if (Spaghetti != ""){
+            ordered_list.add(Spaghetti);
+            ordered_amounts.add(SpaghettiInt);
+        }
+        if (Chicken != ""){
+            ordered_list.add(Chicken);
+            ordered_amounts.add(ChickenInt);
+        }
+        if (Pizza != ""){
+            ordered_list.add(Pizza);
+            ordered_amounts.add(PizzaInt);
+        }
+        if (Grilled != ""){
+            ordered_list.add(Grilled);
+            ordered_amounts.add(GrilledInt);
+        }
+        if (Pesto != ""){
+            ordered_list.add(Pesto);
+            ordered_amounts.add(PestoInt);
+        }
+        if (Italian != ""){
+            ordered_list.add(Italian);
+            ordered_amounts.add(ItalianInt);
+        }
+
+    }
     public void order_execute(View view) {
 
         left_button.setVisibility(View.INVISIBLE);
@@ -320,7 +454,9 @@ public class MainActivity extends AppCompatActivity {
             ordered_amounts.clear();
             right_button.setVisibility(View.INVISIBLE);
             refresh_order();
+            safeArray();
         }
+        safeArray();
     }
     public void return_time() {
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -356,6 +492,8 @@ public class MainActivity extends AppCompatActivity {
         // Access the RequestQueue
         queue.add(jsObjRequest);
     }
+
+
     public void left_execute(View view) {
 
         if (left_button.getText().equals("back")) {
@@ -370,11 +508,11 @@ public class MainActivity extends AppCompatActivity {
                 left_button.setVisibility(View.INVISIBLE);
                 ordered_amounts.remove((int) longclicked);
                 ordered_list.remove((int) longclicked);
+                right_button.setVisibility(View.INVISIBLE);
+                description.setText("you have nothing ordered yet!");
+                description.setVisibility(View.VISIBLE);
+            }
                 if (ordered_list.size() == 0){
-                    right_button.setVisibility(View.INVISIBLE);
-                    description.setText("you have nothing ordered yet!");
-                    description.setVisibility(View.VISIBLE);
-                }
 
             }
 
@@ -382,6 +520,7 @@ public class MainActivity extends AppCompatActivity {
 
             refresh_order();
         }
+        safeArray();
     }
     public void refresh_order(){
         list_text.clear();
